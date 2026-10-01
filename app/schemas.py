@@ -83,6 +83,9 @@ class PropertyEstimateItem(PropertyEstimateCreate):
 
 class EstimateHistoryResponse(BaseModel):
     total_records: int
+    page: int = Field(..., description="Current page index (1-based)", example=1)
+    page_size: int = Field(..., description="Number of items per page", example=10)
+    total_pages: int = Field(..., description="Total number of pages", example=5)
     records: List[PropertyEstimateItem]
 
 class ComparisonRequest(BaseModel):

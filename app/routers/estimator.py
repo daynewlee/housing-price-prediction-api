@@ -1,3 +1,4 @@
+import math
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -58,20 +59,31 @@ def submit_estimate(
 
 @router.get("/history", response_model=EstimateHistoryResponse)
 def get_estimate_history(
-    limit: int = 50,
+    page: int = Query(1, ge=1, description="Page number (starts from 1)"),
+    page_size: int = Query(10, ge=1, le=25, description="Items per page (max 25)"),
     db: Session = Depends(get_db)
 ):
     """
-    Retrieves previous estimates sorted by creation date (newest first).
+    Retrieves paginated property estimates sorted by creation date (newest first).
     """
+    total_records = db.query(PropertyEstimateRecord).count()
+
+    total_pages = math.ceil(total_records / page_size) if total_records > 0 else 1
+
+    offset = (page - 1) * page_size
     records = (
         db.query(PropertyEstimateRecord)
         .order_by(PropertyEstimateRecord.created_at.desc())
-        .limit(limit)
+        .offset(offset)
+        .limit(page_size)
         .all()
     )
+
     return {
-        "total_records": len(records),
+        "total_records": total_records,
+        "page": page,
+        "page_size": page_size,
+        "total_pages": total_pages,
         "records": records
     }
 
