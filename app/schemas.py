@@ -75,8 +75,16 @@ class PropertyEstimateCreate(BaseModel):
 
 class PropertyEstimateItem(PropertyEstimateCreate):
     id: int
+    property_name: str
+    square_footage: float
+    bedrooms: int
+    bathrooms: float
+    year_built: int
+    lot_size: float
+    distance_to_city_center: float
+    school_rating: float
     predicted_price: float
-    currency: str
+    currency: str = "USD"
     created_at: datetime
 
     model_config = {"from_attributes": True}
