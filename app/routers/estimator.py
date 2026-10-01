@@ -1,6 +1,6 @@
 import math
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from app.database import get_db, PropertyEstimateRecord
 from app.schemas import (
